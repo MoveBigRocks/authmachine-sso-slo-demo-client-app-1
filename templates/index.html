@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+<h1>Example OIDC Relying Party</h1>
+{% if user_info %}
+    Logged in as:
+    <pre>{{ user_info }}</pre>
+    <a href="{% url 'logout' %}">Log out</a>
+{% else %}
+    <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client App Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+</head>
+<body style="margin: 20px">
+<h2>AuthMachine Example Client App: Django</h2>
+<br/>
+{% if user_info %}
+    Logged in as: <span>{{ user_info.preferred_username }}</span>
+    <br/><br/>
+    <img
+        style="width: 300px; height: 300px; object-fit: cover; border-radius: 20px"
+        src="https://images.unsplash.com/photo-1598133894008-61f7fdb8cc3a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+    />
+    <br/><br/>
+    <a href="{% url 'logout' %}">Log out</a>
+{% else %}
+    <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+</body>
+</html>
