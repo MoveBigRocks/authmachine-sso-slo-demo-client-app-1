@@ -24,6 +24,13 @@ class LoginView(View):
 class LogoutView(View):
 
     def get(self, request):
+        client = AuthMachineClient(request)
+        return redirect(client.get_logout_url())
+
+
+class OIDLogoutCallbackView(View):
+
+    def get(self, request):
         if "user_info" in request.session:
             request.session.modified = True
             del request.session["user_info"]
