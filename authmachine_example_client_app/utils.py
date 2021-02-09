@@ -16,3 +16,11 @@ def get_client():
     client.client_id = AUTHMACHINE_CLIENT_ID
     client.client_secret = AUTHMACHINE_CLIENT_SECRET
     return client
+
+
+def clear_user_session(request):
+    if "user_info" in request.session:
+        request.session.modified = True
+        del request.session["user_info"]
+        if "token" in request.session:
+            del request.session["token"]

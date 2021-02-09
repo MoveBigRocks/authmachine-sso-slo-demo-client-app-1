@@ -54,7 +54,8 @@ class AuthMachineClient(object):
         args = {
             'scope': settings.AUTHMACHINE_SCOPE,
             'post_logout_redirect_uri': self.host + reverse('auth_logout_callback'),
-            'state': 'some-state-which-will-be-returned-unmodified'
+            'state': 'some-state-which-will-be-returned-unmodified',
+            'revoke_tokens': 1
         }
         url = self.client.provider_info['end_session_endpoint'] + '?' + urlencode(args, True)
         return url
@@ -81,7 +82,6 @@ class AuthMachineClient(object):
         """Returns Open ID userinfo as dict.
         """
 
-        self.get_access_token(authorization_response)
         user_info = self.client.do_user_info_request(
             state=authorization_response['state'],
             authn_method='client_secret_post')
@@ -119,3 +119,20 @@ class AuthMachineClient(object):
             return data
         else:
             return []
+
+    def check_user_session(self, token):
+        args = {
+            'client_id': self.client.client_id,
+            'client_secret': self.client.client_secret,
+            'access_token': token['access_token'],
+            'grant_type': 'check_token_revoked',
+        }
+        response = requests.request(method="POST",
+                                    url=os.path.join(settings.AUTHMACHINE_URL, "oidc/token"),
+                                    data=args)
+
+        if response.status_code == 200:
+            data = response.json()
+            return data
+        else:
+            return None
