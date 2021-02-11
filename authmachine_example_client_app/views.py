@@ -18,7 +18,7 @@ class IndexView(TemplateView):
         if "user_info" in session and "token" in session:
             client = AuthMachineClient(self.request)
             token = session["token"]
-            user_session = client.check_user_session(json.loads(token))
+            user_session = client.check_token_revoked_status(json.loads(token))
             if user_session and user_session["revoked"]:
                 clear_user_session(request)
         context["user_info"] = self.request.session.get("user_info")
@@ -50,8 +50,8 @@ class OIDCallbackView(View):
 
     def get(self, request):
         client = AuthMachineClient(request)
-        aresp = client.get_authorization_response()
-        token = client.get_access_token(aresp)
+        a_resp = client.get_authorization_response()
+        token = client.get_access_token(a_resp)
         request.session["token"] = token.to_json()
-        request.session["user_info"] = client.get_userinfo(aresp)
+        request.session["user_info"] = client.get_userinfo(a_resp)
         return redirect(reverse("index"))

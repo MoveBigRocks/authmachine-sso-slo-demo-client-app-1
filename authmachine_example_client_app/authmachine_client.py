@@ -120,7 +120,7 @@ class AuthMachineClient(object):
         else:
             return []
 
-    def check_user_session(self, token):
+    def check_token_revoked_status(self, token):
         args = {
             'client_id': self.client.client_id,
             'client_secret': self.client.client_secret,
